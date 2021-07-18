@@ -83,6 +83,9 @@ client_get_title(Client *c)
 static inline int
 client_is_float_type(Client *c)
 {
+	struct wlr_xdg_toplevel *toplevel;
+	struct wlr_xdg_toplevel_state *state;
+
 #ifdef XWAYLAND
 	if (client_is_x11(c))
 		for (size_t i = 0; i < c->surface.xwayland->window_type_len; i++)
@@ -92,7 +95,16 @@ client_is_float_type(Client *c)
 					c->surface.xwayland->window_type[i] == netatom[NetWMWindowTypeUtility])
 				return 1;
 #endif
-	return 0;
+	if (c->surface.xdg->role != WLR_XDG_SURFACE_ROLE_TOPLEVEL)
+		return 0;
+
+	toplevel = c->surface.xdg->toplevel;
+	state = &toplevel->current;
+
+	return (state->min_width != 0 && state->min_height != 0
+			&& (state->min_width == state->max_width
+			|| state->min_height == state->max_height))
+		|| toplevel->parent;
 }
 
 static inline int

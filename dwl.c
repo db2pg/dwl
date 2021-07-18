@@ -478,6 +478,12 @@ applyrules(Client *c)
 					mon = m;
 		}
 	}
+
+	if (c->surface.xdg->role == WLR_XDG_SURFACE_ROLE_TOPLEVEL &&
+			c->surface.xdg->toplevel->parent) {
+		c->geom.x = (mon->w.width - c->geom.width) / 2;
+		c->geom.y = (mon->w.height - c->geom.height) / 2;
+	}
 	setmon(c, mon, newtags);
 }
 
