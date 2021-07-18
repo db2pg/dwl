@@ -951,6 +951,8 @@ createpointer(struct wlr_input_device *device)
 
 		if (libinput_device_config_scroll_has_natural_scroll(libinput_device))
 			libinput_device_config_scroll_set_natural_scroll_enabled(libinput_device, natural_scrolling);
+
+		libinput_device_config_left_handed_set(libinput_device,1);
 	}
 
 	/* We don't do anything special with pointers. All of our pointer handling
